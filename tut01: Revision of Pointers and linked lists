@@ -1,0 +1,199 @@
+# Pointer Revision #
+1. Using a diagram, show how the state of memory changes after each line of code is executed.
+int main(void) {
+	int a = 5;
+	int b = 123;
+  
+	int *pa = &a; // pa points to the address of a
+	int *pb = &b; // pb points to the address of b
+
+	*pa = 6;  // value at the address of a is changed to 6
+	*pb = 234; // value at the address of b is changed to 234
+
+	int c = *pa; // c is assigned the value that pa points to (6)
+	*pa = *pb; // value that pa points to is changed to the value that pb  points to (234)
+	*pb = c;  // value that pb points to is now 6
+
+	pa = pb;  // pa points to what pb points to which is b
+	*pa = 345;  //the value at b is changed to 345
+}
+
+2.Explain why the swap() function here does not work as intended:
+
+int main(void) {
+	int a = 5;
+	int b = 7;
+	swap(a, b);
+	printf("a = %d, b = %d\n", a, b);
+}
+
+void swap(int a, int b) {
+	int tmp = a;
+	a = b;
+	b = tmp;
+}
+
+when the swap() function is called it creates a copy of a and b and changes the values of the copied 
+variables so when control is given back to the main function the initial values are unchanged.
+To fix this, parse in the address of the variables to the function and chang ethe parameters to int pointers
+this way the value at the address of a and b are modified directly
+int main(void) {
+	int a = 5;
+	int b = 7;
+	swap(&a, &b);
+	printf("a = %d, b = %d\n", a, b);
+}
+
+void swap(int *a, int *b) {
+	int *tmp = *a;
+	*a = *b;
+	*b = *tmp;
+}
+
+
+# Malloc Revision #
+1. What does malloc do?
+Malloc is a form of dynamic memory allocation and it is useful when the amount of memory needed is unknown eg linked lists
+and when other functions need access to the variable. Malloc stores the data to the heap.
+2. Explain how these two pieces of code differ:
+// this code assigns int a = 5 to the stack so when the function ends, memeory for a is automatically de allocated 
+int main(void) {
+	stackInt();
+}
+
+void stackInt(void) {
+	int a = 5;
+}
+ // this code assigns memory for a to the heap meaning that when the function ends, memory allocation for a still exists.
+int main(void) {
+	heapInt();
+}
+
+void heapInt(void) {
+	int *a = malloc(sizeof(int));
+	*a = 5;
+}
+3. Modify the code below so that it allocates the struct on the heap, instead of the stack.
+
+struct node {
+	int value;
+	struct node *next;
+};
+
+int main(void) {
+	struct node *n = malloc(sizeof(struct node));
+	n->value = 42;
+	n->next = NULL;
+}
+4. The following code creates an array of 5 integers on the stack and uses it to store some values. How can you allocate the array on the heap instead?
+
+int main(void) {
+	int *a = malloc(sizeof(int)*5;
+	for (int i = 0; i < 5; i++) {
+		a[i] = 42;
+	}
+}
+
+# Linked List Revision #
+1. Consider the following two linked list representations:
+
+// Representation 1
+struct node {
+    int value;
+    struct node *next;
+};
+
+int listLength(struct node *list);
+
+// Representation 2
+struct node {
+    int value;
+    struct node *next;
+};
+
+struct list {
+    struct node *head;
+};
+
+int listLength(struct list *list);
+a. Compare the two representations diagramatically.
+// Rep 1:
+[] --> X
+
+// Rep 2:
+--> Head --> [] --> X
+b. How is an empty list represented in each case?
+// Rep 1:
+--> X
+// Rep 2:
+--> head --> X
+
+c. What are the advantages of having a separate list struct as in Representation 2?
+Having a seperate list struct means that there is no need to return an updated list when a function modifies the list.
+allows for metadata to be stored in the list struct eg number of nodes in the list
+
+2. Consider the following simple linked list representation:
+
+struct node {
+	int value;
+	struct node *next;
+};
+Write a function to sum the values in the list. Implement it first using while and then using for.
+int sum (struct node *list){
+  int count = 0;
+  struct node *curr = list;
+  while(curr){
+    count += list->value;
+    curr = curr->next;
+  }
+  return count;
+}
+
+int sum(struct node *list){
+  int count = 0;
+  for(struct node *curr = list; curr != NULL; curr = curr->next){
+    count += curr->value;
+  }
+  return count;
+}
+
+3. Implement a function to delete the first instance of a value from a list, if it exists. Use the following list representation and prototype:
+
+struct node {
+    int value;
+    struct node *next;
+};
+
+struct node *listDelete(struct node *list, int value){
+  // list is empty
+  if(list == NULL){
+    return NULL;
+  }
+  // to delete is first element
+  else if(list->value == value){
+    return list->next;
+  } else {
+    while(curr->next != NULL){
+      if(curr->next->value == value){
+        struct node *toDel = curr->next;
+        curr->next = curr->next->next;
+        free(toDel);
+      }
+      curr = curr->next;
+  }
+  return list;
+}
+        
+    
+How would the implementation and prototype be different if the following list representation was used instead?
+
+struct node {
+    int value;
+    struct node *next;
+};
+
+struct list {
+	struct node *head;
+};
+
+the prototype would be void
