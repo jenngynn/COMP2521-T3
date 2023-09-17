@@ -196,4 +196,23 @@ struct list {
 	struct node *head;
 };
 
-the prototype would be void
+the prototype would be void since there is a wrapper/container struct that always points to the first node of the linked list.
+when deleting an element the pointer would just need to be updated instead of the node being returned.
+
+void deleteNode(struct list *head, int value){
+	// empty list
+	if(list->head == NULL){
+		return;
+	}	
+	//first element in the list
+	if(list->head->value == value){
+		struct node *toDel = list->head;
+		list->head = head->next;
+		free(toDel);
+		return;
+	}
+	head->
+		
+
+
+
