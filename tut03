@@ -1,0 +1,12 @@
+2. Compare the Performance of bubble sort and insertion sort on the following types of input:
+	* sorted 
+		Buuble: O(n) 
+		Insert: O(n)
+	* reverse-sorted:
+		Bubble: O(n^2)
+		Insert: O(n^2)
+	* sorted except the first and last numbers are swapped
+		Bubble: O(n^2)
+		Insert: O(n^2)
+
+3> 
